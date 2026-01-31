@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Support System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Page 1 - Selection */
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .option-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            border: 3px solid transparent;
+        }
+        
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .option-card.selected {
+            border-color: #207cca;
+            background-color: #f0f9ff;
+        }
+        
+        .option-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #207cca;
+        }
+        
+        .option-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .option-desc {
+            font-size: 0.95rem;
+            color: #666;
+        }
+        
+        /* Page 2 & 3 - Panels */
+        .panels-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-top: 5px solid #207cca;
+            position: relative;
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #1e5799;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .panel-title i {
+            font-size: 1.3rem;
+        }
+        
+        .panel-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        
+        .website-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .website-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .website-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .website-list a {
+            color: #207cca;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .website-list a:hover {
+            text-decoration: underline;
+            color: #1e5799;
+        }
+        
+        /* Page 4 - Helplines */
+        .helpline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .helpline-item {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #207cca;
+            position: relative;
+        }
+        
+        .helpline-name {
+            font-size: 1.4rem;
+            color: #1e5799;
+            margin-bottom: 10px;
+        }
+        
+        .helpline-details {
+            color: #444;
+            line-height: 1.7;
+        }
+        
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .btn {
+            background-color: #207cca;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            background-color: #1e5799;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .page-indicator {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .selected-topic {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #1e5799;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(30, 87, 153, 0.1);
+            border-radius: 10px;
+        }
+        
+        /* Voice Button */
+        .voice-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+        }
+        
+        .voice-btn:hover {
+            background-color: #3d8b40;
+            transform: scale(1.1);
+        }
+        
+        .voice-btn.speaking {
+            background-color: #f44336;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .voice-btn i {
+            font-size: 1.2rem;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+        
+        /* Voice Controls */
+        .voice-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .voice-controls .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+        
+        .voice-info {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .panels-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            
+            .voice-btn {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heart"></i> Mental Health Support System</h1>
+            <p class="subtitle">A safe space for guidance and resources to support your mental wellbeing</p>
+            <div class="voice-info">
+                <i class="fas fa-volume-up"></i> Click the green voice button on any panel to hear its content
+            </div>
+        </header>
+        
+        <!-- Voice Controls -->
+        <div class="voice-controls" id="voiceControls" style="display: none;">
+            <button class="btn" id="pauseBtn" style="background-color: #ff9800;">
+                <i class="fas fa-pause"></i> Pause
+            </button>
+            <button class="btn" id="resumeBtn" style="background-color: #4CAF50;">
+                <i class="fas fa-play"></i> Resume
+            </button>
+            <button class="btn" id="stopBtn" style="background-color: #f44336;">
+                <i class="fas fa-stop"></i> Stop
+            </button>
+            <div id="voiceStatus">Voice ready</div>
+        </div>
+        
+        <!-- Page 1: Selection -->
+        <div id="page1" class="page active">
+            <h2>What do you want help dealing with?</h2>
+            <p style="text-align: center; margin-top: 10px; color: #666;">Please select one option to continue</p>
+            
+            <div class="options-container">
+                <div class="option-card" data-option="anxiety">
+                    <div class="option-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="option-title">Anxiety</div>
+                    <div class="option-desc">Excessive worry, nervousness, or fear that interferes with daily life</div>
+                </div>
+                
+                <div class="option-card" data-option="depression">
+                    <div class="option-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="option-title">Depression</div>
+                    <div class="option-desc">Persistent feelings of sadness, hopelessness, and loss of interest</div>
+                </div>
+                
+                <div class="option-card" data-option="paranoia">
+                    <div class="option-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="option-title">Paranoia</div>
+                    <div class="option-desc">Irrational mistrust or suspicion of others</div>
+                </div>
+                
+                <div class="option-card" data-option="phobia">
+                    <div class="option-icon">
+                        <i class="fas fa-spider"></i>
+                    </div>
+                    <div class="option-title">Extreme Phobia</div>
+                    <div class="option-desc">Intense, irrational fear of specific objects or situations</div>
+                </div>
+                
+                <div class="option-card" data-option="adhd">
+                    <div class="option-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="option-title">ADHD</div>
+                    <div class="option-desc">Difficulty with attention, hyperactivity, and impulse control</div>
+                </div>
+                
+                <div class="option-card" data-option="ocd">
+                    <div class="option-icon">
+                        <i class="fas fa-redo"></i>
+                    </div>
+                    <div class="option-title">OCD</div>
+                    <div class="option-desc">Obsessive thoughts and compulsive behaviors</div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" disabled id="prevBtn1">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="btn" disabled id="nextBtn1">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="page-indicator">Page 1 of 4</div>
+        </div>
+        
+        <!-- Page 2: Guidance, Causes, and Websites -->
+        <div id="page2" class="page">
+            <h2 class="selected-topic" id="topicHeader2">Anxiety Support</h2>
+            
+            <div class="panels-container">
+                <div class="panel">
+                    <button class="voice-btn" data-content-id="guidanceContent">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="panel-title">
+                        <i class="fas fa-hands-helping"></i> Let's Understand This 
+                    </div>
+                    <div class="panel-content" id="guidanceContent">
+                        <!-- Content will be loaded based on selection -->
+                        paste your info here
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <button class="voice-btn" data-content-id="causesContent">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="panel-title">
+                        <i class="fas fa-question-circle"></i> Why This Is Caused
+                    </div>
+                    <div class="panel-content" id="causesContent">
+                        <!-- Content will be loaded based on selection -->
+                        paste your info here
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <button class="voice-btn" data-content-id="websitesList1">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="panel-title">
+                        <i class="fas fa-globe"></i> Websites You Can Visit
+                    </div>
+                    <div class="panel-content">
+                        <ul class="website-list" id="websitesList1">
+                            <!-- Websites will be loaded based on selection -->
+                            <li><a href="#"><i class="fas fa-external-link-alt"></i> paste your website here</a></li>
+                            <li><a href="#"><i class="fas fa-external-link-alt"></i> paste your website here</a></li>
+                            <li><a href="#"><i class="fas fa-external-link-alt"></i> paste your website here</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" id="prevBtn2">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="btn" id="nextBtn2">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="page-indicator">Page 2 of 4</div>
+        </div>
+        
+        <!-- Page 3: How to Deal and Websites -->
+        <div id="page3" class="page">
+            <h2 class="selected-topic" id="topicHeader3">Anxiety Support</h2>
+            
+            <div class="panels-container">
+                <div class="panel">
+                    <button class="voice-btn" data-content-id="howToDealContent">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="panel-title">
+                        <i class="fas fa-tasks"></i> How to Deal With This
+                    </div>
+                    <div class="panel-content" id="howToDealContent">
+                        <!-- Content will be loaded based on selection -->
+                        paste your info here
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <button class="voice-btn" data-content-id="websitesList2">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="panel-title">
+                        <i class="fas fa-laptop-medical"></i> Additional Resources
+                    </div>
+                    <div class="panel-content">
+                        <ul class="website-list" id="websitesList2">
+                            <!-- Websites will be loaded based on selection -->
+                            <li><a href="#"><i class="fas fa-external-link-alt"></i> paste your website here</a></li>
+                            <li><a href="#"><i class="fas fa-external-link-alt"></i> paste your website here</a></li>
+                            <li><a href="#"><i class="fas fa-external-link-alt"></i> paste your website here</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" id="prevBtn3">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="btn" id="nextBtn3">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="page-indicator">Page 3 of 4</div>
+        </div>
+        
+        <!-- Page 4: Helplines -->
+        <div id="page4" class="page">
+            <h2 class="selected-topic" id="topicHeader4">Anxiety Support</h2>
+            
+            <div class="helpline-list" id="helplineContent">
+                <!-- Helpline content will be loaded based on selection -->
+                <div class="helpline-item">
+                    <button class="voice-btn" data-content-id="helplineItem0">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="helpline-name">National Helpline</div>
+                    <div class="helpline-details" id="helplineItem0">
+                        <p><strong>Phone:</strong> 1-800-123-HELP</p>
+                        <p><strong>Availability:</strong> 24/7</p>
+                        <p><strong>Services:</strong> Crisis counseling, referrals to local resources</p>
+                    </div>
+                </div>
+                
+                <div class="helpline-item">
+                    <button class="voice-btn" data-content-id="helplineItem1">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="helpline-name">Local Psychologist</div>
+                    <div class="helpline-details" id="helplineItem1">
+                        <p><strong>Name:</strong> Dr. Jane Smith</p>
+                        <p><strong>Specialization:</strong> Anxiety disorders</p>
+                        <p><strong>Contact:</strong> (555) 123-4567</p>
+                        <p><strong>Address:</strong> 123 Wellness St, Mental Health City</p>
+                    </div>
+                </div>
+                
+                <div class="helpline-item">
+                    <button class="voice-btn" data-content-id="helplineItem2">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="helpline-name">Online Therapy Platform</div>
+                    <div class="helpline-details" id="helplineItem2">
+                        <p><strong>Website:</strong> www.onlinetherapy.example.com</p>
+                        <p><strong>Services:</strong> Licensed therapists available via video, chat, or phone</p>
+                        <p><strong>Cost:</strong> Sliding scale available</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" id="prevBtn4">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="btn" id="restartBtn">
+                    Restart <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            <div class="page-indicator">Page 4 of 4</div>
+        </div>
+    </div>
+
+    <script>
+        // Current state
+        let currentPage = 1;
+        let selectedOption = '';
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+        let isSpeaking = false;
+        
+        // Mental health data - you can replace these placeholders with your actual content
+        const mentalHealthData = {
+            anxiety: {
+                name: "Anxiety",
+                guidance: "An anxiety disorder is a type of mental health condition. If you have an anxiety disorder, you may respond to certain things and situations with fear and dread. You may also experience physical signs of anxiety, such as a pounding heart and sweating.",
+                causes: "The causes of anxiety disorders aren't fully understood. Life experiences such as traumatic events appear to trigger anxiety disorders in people who are already prone to anxiety. Inherited traits also can be a factor.",
+                websites1: [
+                    {name: "CleaveLand Clinic", url: "https://my.clevelandclinic.org/health/diseases/9536-anxiety-disorders"},
+                    {name: "World Health Organization", url:" https://www.who.int/news-room/fact-sheets/detail/anxiety-disorders"},
+                    {name: "Harvard", url: "https://www.health.harvard.edu/blog/anxiety-what-it-is-what-to-do-2018060113955"}
+                ],
+                howToDeal: "The two main treatments for anxiety disorders are psychotherapy and medications. You may benefit most from a combination of the two. It may take some trial and error to discover which treatments work best for you.",
+                websites2: [
+                    {name: "Mayo Clinic", url: "https://www.mayoclinic.org/diseases-conditions/depression/diagnosis-treatment/drc-20356013"},
+                    {name: "Cleaveland Clinic Psychotherapy", url: "https://my.clevelandclinic.org/health/treatments/23445-psychotherapy"},
+                    {name: "Cleaveland Clinic CBT", url: "https://my.clevelandclinic.org/health/treatments/21208-cognitive-behavioral-therapy-cbt"}
+                ],
+                helplines: [
+                    {name: "Dr Mitsuvi Malik", phone: "+91 926 888 0303", availability: "24/7", website:"https://www.maxhealthcare.in/doctor/dr-mitsuvi-malik", details: "Developmental and Behavioural Therapist Mental Health And Behavioural Sciences, Clinical Psychology"},
+                    {name: "Dr. Robert Chen - Anxiety Specialist", phone: "(555) 987-6543", specialization: "Anxiety and panic disorders", address: "456 Calm Avenue, Serenity City"},
+                    {name: "Max HealthCare", website: "https://www.maxhealthcare.in/doctor/clinical-psychologist", details: "Psychologists you can visit"}
+                ]
+            },
+            depression: {
+                name: "Depression",
+                guidance: "Depressive disorder (also known as depression) is a common mental disorder. It involves a depressed mood or loss of pleasure or interest in activities for long periods of time.Depression is different from regular mood changes and feelings about everyday life. It can affect all aspects of life, including relationships with family, friends and community. It can result from or lead to problems at school and at work.",
+                causes: "Brain chemistry: An imbalance of neurotransmitters, including serotonin and dopamine, contributes to the development of depression.Genetics: If you have a first-degree relative (biological parent or sibling) with depression, you're about three times as likely to develop the condition as the general population. However, you can have depression without a family history of it.Stressful life events: Difficult experiences, such as the death of a loved one, trauma, divorce, isolation and lack of support, can trigger depression.Medical conditions: Chronic pain and chronic conditions like diabetes can lead to depression.Medication: Some medications can cause depression as a side effect. Substance use, including alcohol, can also cause depression or make it worse.",
+                websites1: [
+                    {name: "Cleaveland Clinic", url: "https://my.clevelandclinic.org/health/diseases/9290-depression"},
+                    {name: "World Health Organization", url: "https://www.who.int/news-room/fact-sheets/detail/depression"},
+                    {name: "Mayo Clinic", url: "https://www.mayoclinic.org/diseases-conditions/depression/diagnosis-treatment/drc-20356013"}
+                ],
+                howToDeal: "A psychiatrist will listen attentively, analyze symptoms, and assess the mental condition, including emotions and feelings, to alleviate depressive symptoms, open up discussion, and find the best possible solution to the issues Antidepressants are medications prescribed to help balance the secretion of neurotransmitters in the brain as well as reduce symptoms of depression such as insomnia, restlessness, or poor appetite. Each type of antidepressant has a unique mechanism of action and side effects. The psychiatrist will determine the appropriate dosage for each individual and gradually adjust the medication every 1-2 weeks until arriving at a proper dosage.",
+                websites2: [
+                    {name: "Cognitive Behavioral Therapy", url: "https://my.clevelandclinic.org/health/treatments/21208-cognitive-behavioral-therapy-cbt"},
+                    {name: "Depression Tests", url: "https://www.medparkhospital.com/en-US/disease-and-treatment/depression-tests"},
+                    {name: "Mayo Clinic", url: "https://www.mayoclinic.org/diseases-conditions/depression/diagnosis-treatment/drc-20356013"}
+                ],
+                helplines: [
+                    {name: "Nikita Reddy", phone: "+91 2071 171 501", availability: "24/7", website: "https://www.amahahealth.com/psychiatrist/dr-nikitha-reddy/"},
+                    {name: "Kruthi K K", phone: "91 2071 171 501 ", website: "https://www.amahahealth.com/therapist/kruthi-k-k/"},
+                    {name: "AMAHA", website: "https://www.amahahealth.com/therapy-psychiatry/lpexpt/2b3/?activeTab=therapist&utm_term=&utm_campaign=pmax_consult_therapy_bofl_book_brand-negated_10dec24&utm_source=google&utm_medium=cpc&utm_content=counselling-terms&campaignid=22014539002&adgroupid=&adid=&keyword=&content=&gad_source=1&gad_campaignid=22014548101&gclid=Cj0KCQiA7fbLBhDJARIsAOAqhseaKyGLUBTT46_vqxQu2khdqgQwoCA6JfTmN--D1BKYIi4jbQP1q08aAmz1EALw_wcB" }
+                ]
+            },
+            
+            paranoia: {
+                name: "Paranoia",
+                guidance: "Paranoia is a way of thinking that involves feelings of distrust and suspicion about others without a good reason. It often involves thoughts that others are out to get you or are looking to harm you in some way. You can also have paranoid thoughts about threats to other people, your culture or society.",
+                causes: "Researchers don't know the exact cause of paranoia. But they think certain factors may contribute to it, including:Childhood trauma, especially bullying, and victimization.Environmental factors, like low socioeconomic status and social isolation.Intense or chronic stress.",
+                websites1: [
+                    {name: "Cleaveland Clinic", url: "https://my.clevelandclinic.org/health/symptoms/paranoia"},
+                    {name: "National Library Of Medicine", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10649488/"},
+                    {name: "Mental Health America", url: "https://mhanational.org/conditions/paranoia-and-delusional-disorders"}
+                ],
+                howToDeal: "If you have mild to moderate paranoia without an underlying mental health condition, psychotherapy (talk therapy) may help. With the guidance of a mental health professional (like a psychologist), you can identify and change unhealthy emotions, thoughts and behaviors.If you have an underlying mental health condition that's causing paranoia, treatment varies based on the condition and its severity. It typically involves a combination of psychotherapy and medications, like anxiolytics and/or antipsychotic medications.If you have severe paranoia and other severe symptoms of psychosis (like hallucinations), you may need to stay in a hospital until your symptoms stabilize.",
+                websites2: [
+                    {name: "Psychotherapy", url: "https://my.clevelandclinic.org/health/treatments/23445-psychotherapy"},
+                    {name: "Anxiolytics", url: "https://my.clevelandclinic.org/health/treatments/24776-anxiolytics"},
+                    {name: "Antipsychotic Medications", url: "https://my.clevelandclinic.org/health/treatments/24692-antipsychotic-medications"}
+                ],
+                helplines: [
+                    {name: "Dr Shoba James", phone: "+91 2071 171 501", website: "https://www.amahahealth.com/therapist/dr-shoba-james/"},
+                   {name: "AMAHA", phone: "+91 2071 171 501", website: "https://www.amahahealth.com"}
+                ]
+            } ,
+            phobia: {
+                name: "Extreme Phobia",
+                guidance: "Phobias are when your brain takes fear and anxiety to extreme degrees. Under ordinary circumstances, these emotions can be protective and helpful. They're your brain's way of warning you that something is wrong and you might be (or currently are) in danger. But experts don't fully understand why these emotions can turn into phobias. However, several factors and processes may contribute to having a phobia",
+                causes: "Traumatic experiences. These can be experiences that happen to you or that you see happen to someone else.Genetics. Certain types of phobias are more likely to happen in people who have a relative with that type of phobia. The types with higher rates in family members are animal, blood/medical procedure/injury and situational phobias.Informational transmission. Some phobias may happen because of things you learn about or things you see or hear repeatedly.Learned fears. People can learn about the phobias or fears of others and may develop a phobia as a result. This may be a factor in why people with overprotective parents may be more likely to have specific phobia.",
+                websites1: [
+                    {name: "Cleaveland Clinic", url: "https://my.clevelandclinic.org/health/diseases/24757-phobias"},
+                    {name: "Harvard", url: "https://www.health.harvard.edu/a_to_z/phobia-a-to-z"}
+                ],
+                howToDeal: "Many people with a phobia don't need treatment and avoiding the object of their fear is enough to control the problem.However, it may not always be possible to avoid certain phobias, such as a fear of flying. In this instance, you may decide to get professional help and advice to find out about treatment options.Most phobias are treatable, but no single treatment is guaranteed to work for all phobias. In some cases, a combination of different treatments may be recommended.The main treatment types are self-help techniquestalking treatments medication",
+                websites2: [
+                    {name: "NHS Treatment", url: "https://www.nhs.uk/mental-health/conditions/phobias/treatment/"},
+                    {name: "Phobias", url: "https://my.clevelandclinic.org/health/diseases/24757-phobias"}
+                ],
+                helplines: [
+                    {name: "Preeti Singh", website: "https://www.maxhealthcare.in/doctor/dr-preeti-singh", phone: "9268880303"},
+                    {name:"Max Health Care" , website:"https://www.maxhealthcare.in/doctor/clinical-psychologist"}
+                ]
+            },
+            adhd: {
+                name: "ADHD",
+                guidance: "Attention-deficit/hyperactivity disorder (ADHD) is one of the most common mental disorders affecting children. Symptoms of ADHD include inattention (not being able to keep focus), hyperactivity (excess movement that is not fitting to the setting) and impulsivity (hasty acts that occur in the moment without thought).",
+                causes: "Genetics: ADHD tends to run in families.Environment: Certain environmental factors, such as lead exposure, may increase risk.Development: Problems with the central nervous system at key moments in development may play a role.",
+                websites1: [
+                    {name: "NIH: National Institute of Mental Health", url: "https://www.nimh.nih.gov/health/topics/attention-deficit-hyperactivity-disorder-adhd"},
+                    {name: "CDC: ADHD", url: "https://www.cdc.gov/ncbddd/adhd/index.html"},
+                    {name: "American Psychiatric Association", url: "https://www.psychiatry.org/patients-families/adhd"}
+                ],
+                howToDeal: "Treatment for ADHD typically involves medication, psychotherapy, education or training, or a combination of treatments. Stimulant medications are often used to help control symptoms. Behavioral therapy can help manage symptoms and teach coping skills.",
+                websites2: [
+                    {name: "ADHD Treatment Overview", url: "https://www.mayoclinic.org/diseases-conditions/adhd/diagnosis-treatment/drc-20350895"},
+                    {name: "CHADD: The National Resource on ADHD", url: "https://chadd.org/"},
+                    {name: "Understood: ADHD Resources", url: "https://www.understood.org/en/learning-thinking-differences/child-learning-disabilities/add-adhd"}
+                ],
+                helplines: [
+                    {name: "ADHD Helpline", phone: "1-800-233-4050", availability: "Weekdays 1-5 PM ET", website: "https://chadd.org/about/contact/", details: "CHADD National Resource Center on ADHD"},
+                    {name: "National Alliance on Mental Illness", phone: "1-800-950-NAMI (6264)", availability: "Monday-Friday, 10am-6pm ET", website: "https://www.nami.org/Home", details: "Provides information, referrals and support for ADHD and other mental health conditions"}
+                ]
+            },
+            ocd: {
+                name: "OCD",
+                guidance: "Obsessive-compulsive disorder (OCD) is a disorder in which people have recurring, unwanted thoughts, ideas or sensations (obsessions) that make them feel driven to do something repetitively (compulsions). The repetitive behaviors, such as hand washing, checking on things or cleaning, can significantly interfere with a person's daily activities and social interactions.",
+                causes: "The cause of obsessive-compulsive disorder isn't fully understood. Main theories include: Biology: OCD may be a result of changes in your body's own natural chemistry or brain functions. Genetics: OCD may have a genetic component, but specific genes have yet to be identified. Environment: Some environmental factors such as infections are suggested as a trigger for OCD, but more research is needed.",
+                websites1: [
+                    {name: "International OCD Foundation", url: "https://iocdf.org/"},
+                    {name: "NIH: Obsessive-Compulsive Disorder", url: "https://www.nimh.nih.gov/health/topics/obsessive-compulsive-disorder-ocd"},
+                    {name: "Mayo Clinic: OCD", url: "https://www.mayoclinic.org/diseases-conditions/obsessive-compulsive-disorder/symptoms-causes/syc-20354432"}
+                ],
+                howToDeal: "OCD is typically treated with medication, psychotherapy or a combination of the two. Cognitive behavioral therapy (CBT), a type of psychotherapy, is effective for many people with OCD. Exposure and response prevention (ERP), a type of CBT, involves gradually exposing you to a feared object or obsession and teaching you healthy ways to cope with your anxiety.",
+                websites2: [
+                    {name: "OCD Treatment Guide", url: "https://www.apa.org/topics/obsessive-compulsive-disorder/treatment"},
+                    {name: "Beyond OCD", url: "https://beyondocd.org/"},
+                    {name: "Anxiety and Depression Association of America: OCD", url: "https://adaa.org/understanding-anxiety/obsessive-compulsive-disorder-ocd"}
+                ],
+                helplines: [
+                    {name: "International OCD Foundation Helpline", phone: "1-617-973-5801", availability: "Monday-Friday, 9am-5pm ET", website: "https://iocdf.org/", details: "Provides information, resources and referrals for OCD treatment"},
+                    {name: "NAMI Helpline", phone: "1-800-950-NAMI (6264)", availability: "Monday-Friday, 10am-6pm ET", website: "https://www.nami.org/Home", details: "Support and resources for OCD and related conditions"},
+                    {name: "Crisis Text Line", phone: "Text HOME to 741741", availability: "24/7", website: "https://www.crisistextline.org/", details: "Free, 24/7 crisis counseling via text message"}
+                ]
+            }
+        };
+        
+        // DOM elements
+        const optionCards = document.querySelectorAll('.option-card');
+        const pages = document.querySelectorAll('.page');
+        const nextBtns = document.querySelectorAll('[id^="nextBtn"]');
+        const prevBtns = document.querySelectorAll('[id^="prevBtn"]');
+        const restartBtn = document.getElementById('restartBtn');
+        const nextBtn1 = document.getElementById('nextBtn1');
+        const voiceControls = document.getElementById('voiceControls');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resumeBtn = document.getElementById('resumeBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const voiceStatus = document.getElementById('voiceStatus');
+        
+        // Topic headers
+        const topicHeader2 = document.getElementById('topicHeader2');
+        const topicHeader3 = document.getElementById('topicHeader3');
+        const topicHeader4 = document.getElementById('topicHeader4');
+        
+        // Content areas
+        const guidanceContent = document.getElementById('guidanceContent');
+        const causesContent = document.getElementById('causesContent');
+        const howToDealContent = document.getElementById('howToDealContent');
+        const websitesList1 = document.getElementById('websitesList1');
+        const websitesList2 = document.getElementById('websitesList2');
+        const helplineContent = document.getElementById('helplineContent');
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up option selection
+            optionCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selection from all cards
+                    optionCards.forEach(c => c.classList.remove('selected'));
+                    
+                    // Add selection to clicked card
+                    this.classList.add('selected');
+                    
+                    // Enable next button on page 1
+                    nextBtn1.disabled = false;
+                    
+                    // Store selected option
+                    selectedOption = this.getAttribute('data-option');
+                    
+                    // Update topic headers
+                    const topicName = mentalHealthData[selectedOption].name;
+                    topicHeader2.textContent = `${topicName} Support`;
+                    topicHeader3.textContent = `${topicName} Support`;
+                    topicHeader4.textContent = `${topicName} Support`;
+                    
+                    // Load content for the selected option
+                    loadContentForOption(selectedOption);
+                });
+            });
+            
+            // Navigation buttons
+            nextBtns.forEach(btn => {
+                btn.addEventListener('click', goToNextPage);
+            });
+            
+            prevBtns.forEach(btn => {
+                btn.addEventListener('click', goToPrevPage);
+            });
+            
+            restartBtn.addEventListener('click', restartApp);
+            
+            // Voice control buttons
+            pauseBtn.addEventListener('click', pauseSpeech);
+            resumeBtn.addEventListener('click', resumeSpeech);
+            stopBtn.addEventListener('click', stopSpeech);
+            
+            // Set up voice buttons
+            setupVoiceButtons();
+            
+            // Handle speech synthesis events
+            speechSynthesis.addEventListener('start', () => {
+                isSpeaking = true;
+                voiceControls.style.display = 'flex';
+                voiceStatus.textContent = 'Speaking...';
+            });
+            
+            speechSynthesis.addEventListener('end', () => {
+                isSpeaking = false;
+                voiceControls.style.display = 'none';
+                voiceStatus.textContent = 'Voice ready';
+                // Remove speaking class from all voice buttons
+                document.querySelectorAll('.voice-btn').forEach(btn => {
+                    btn.classList.remove('speaking');
+                });
+            });
+            
+            speechSynthesis.addEventListener('error', () => {
+                isSpeaking = false;
+                voiceControls.style.display = 'none';
+                voiceStatus.textContent = 'Voice error - try again';
+                // Remove speaking class from all voice buttons
+                document.querySelectorAll('.voice-btn').forEach(btn => {
+                    btn.classList.remove('speaking');
+                });
+            });
+        });
+        
+        // Navigation functions
+        function goToNextPage() {
+            if (currentPage < 4) {
+                // Stop any ongoing speech when changing pages
+                stopSpeech();
+                
+                // Hide current page
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                
+                // Show next page
+                currentPage++;
+                document.getElementById(`page${currentPage}`).classList.add('active');
+            }
+        }
+        
+        function goToPrevPage() {
+            if (currentPage > 1) {
+                // Stop any ongoing speech when changing pages
+                stopSpeech();
+                
+                // Hide current page
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                
+                // Show previous page
+                currentPage--;
+                document.getElementById(`page${currentPage}`).classList.add('active');
+            }
+        }
+        
+        function restartApp() {
+            // Stop any ongoing speech
+            stopSpeech();
+            
+            // Reset to page 1
+            document.getElementById(`page${currentPage}`).classList.remove('active');
+            currentPage = 1;
+            document.getElementById(`page${currentPage}`).classList.add('active');
+            
+            // Clear selection
+            optionCards.forEach(card => card.classList.remove('selected'));
+            nextBtn1.disabled = true;
+            selectedOption = '';
+        }
+        
+        // Load content based on selected option
+        function loadContentForOption(option) {
+            const data = mentalHealthData[option];
+            
+            // Update page 2 content
+            guidanceContent.textContent = data.guidance;
+            causesContent.textContent = data.causes;
+            
+            // Update websites on page 2
+            websitesList1.innerHTML = '';
+            data.websites1.forEach(website => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="${website.url}" target="_blank"><i class="fas fa-external-link-alt"></i> ${website.name}</a>`;
+                websitesList1.appendChild(li);
+            });
+            
+            // Update page 3 content
+            howToDealContent.textContent = data.howToDeal;
+            
+            // Update websites on page 3
+            websitesList2.innerHTML = '';
+            data.websites2.forEach(website => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="${website.url}" target="_blank"><i class="fas fa-external-link-alt"></i> ${website.name}</a>`;
+                websitesList2.appendChild(li);
+            });
+            
+            // Update page 4 content
+            helplineContent.innerHTML = '';
+            data.helplines.forEach((helpline, index) => {
+                const div = document.createElement('div');
+                div.className = 'helpline-item';
+                
+                let detailsHTML = '';
+                if (helpline.phone) {
+                    detailsHTML += `<p><strong>Phone:</strong> ${helpline.phone}</p>`;
+                }
+                if (helpline.availability) {
+                    detailsHTML += `<p><strong>Availability:</strong> ${helpline.availability}</p>`;
+                }
+                if (helpline.specialization) {
+                    detailsHTML += `<p><strong>Specialization:</strong> ${helpline.specialization}</p>`;
+                }
+                if (helpline.address) {
+                    detailsHTML += `<p><strong>Address:</strong> ${helpline.address}</p>`;
+                }
+                if (helpline.website) {
+                    detailsHTML += `<p><strong>Website:</strong> <a href="${helpline.website}" target="_blank">${helpline.website}</a></p>`;
+                }
+                if (helpline.details) {
+                    detailsHTML += `<p><strong>Services:</strong> ${helpline.details}</p>`;
+                }
+                
+                div.innerHTML = `
+                    <button class="voice-btn" data-content-id="helplineItem${index}">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="helpline-name">${helpline.name}</div>
+                    <div class="helpline-details" id="helplineItem${index}">${detailsHTML}</div>
+                `;
+                helplineContent.appendChild(div);
+            });
+            
+            // Re-setup voice buttons after loading new content
+            setupVoiceButtons();
+        }
+        
+        // Voice functionality
+        function setupVoiceButtons() {
+            // Remove existing event listeners
+            const voiceButtons = document.querySelectorAll('.voice-btn');
+            voiceButtons.forEach(btn => {
+                btn.replaceWith(btn.cloneNode(true));
+            });
+            
+            // Get fresh references
+            const freshVoiceButtons = document.querySelectorAll('.voice-btn');
+            
+            freshVoiceButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const contentId = this.getAttribute('data-content-id');
+                    let textToSpeak = '';
+                    
+                    // Get text content based on the content ID
+                    if (contentId.includes('helplineItem')) {
+                        const contentElement = document.getElementById(contentId);
+                        if (contentElement) {
+                            textToSpeak = contentElement.textContent || contentElement.innerText;
+                        }
+                    } else {
+                        const contentElement = document.getElementById(contentId);
+                        if (contentElement) {
+                            // For website lists, extract text from links
+                            if (contentId.includes('websitesList')) {
+                                const links = contentElement.querySelectorAll('a');
+                                textToSpeak = 'Recommended websites: ';
+                                links.forEach(link => {
+                                    textToSpeak += link.textContent.replace('paste your website here', 'Resource website') + '. ';
+                                });
+                            } else {
+                                textToSpeak = contentElement.textContent || contentElement.innerText;
+                            }
+                        }
+                    }
+                    
+                    // Clean up the text
+                    textToSpeak = textToSpeak
+                        .replace(/paste your info here/g, 'Information will be displayed here')
+                        .replace(/paste your website here/g, 'Resource website')
+                        .trim();
+                    
+                    // If we have text to speak
+                    if (textToSpeak) {
+                        // Stop any ongoing speech
+                        stopSpeech();
+                        
+                        // Remove speaking class from all buttons
+                        freshVoiceButtons.forEach(b => b.classList.remove('speaking'));
+                        
+                        // Add speaking class to current button
+                        this.classList.add('speaking');
+                        
+                        // Speak the text
+                        speakText(textToSpeak);
+                    }
+                });
+            });
+        }
+        
+        function speakText(text) {
+            // Create a new utterance
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            
+            // Configure voice settings
+            currentUtterance.rate = 0.9; // Slightly slower than normal
+            currentUtterance.pitch = 1;
+            currentUtterance.volume = 1;
+            
+            // Find a good voice
+            const voices = speechSynthesis.getVoices();
+            const preferredVoices = voices.filter(voice => 
+                voice.lang.startsWith('en-') && 
+                (voice.name.includes('Female') || voice.name.includes('Natural') || voice.name.includes('Google'))
+            );
+            
+            if (preferredVoices.length > 0) {
+                currentUtterance.voice = preferredVoices[0];
+            }
+            
+            // Start speaking
+            speechSynthesis.speak(currentUtterance);
+        }
+        
+        function pauseSpeech() {
+            if (isSpeaking && speechSynthesis.speaking) {
+                speechSynthesis.pause();
+                voiceStatus.textContent = 'Paused';
+            }
+        }
+        
+        function resumeSpeech() {
+            if (isSpeaking && speechSynthesis.paused) {
+                speechSynthesis.resume();
+                voiceStatus.textContent = 'Speaking...';
+            }
+        }
+        
+        function stopSpeech() {
+            if (isSpeaking) {
+                speechSynthesis.cancel();
+                isSpeaking = false;
+                voiceControls.style.display = 'none';
+                voiceStatus.textContent = 'Voice ready';
+                
+                // Remove speaking class from all voice buttons
+                document.querySelectorAll('.voice-btn').forEach(btn => {
+                    btn.classList.remove('speaking');
+                });
+            }
+        }
+        
+        // Initialize voices when they become available
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = function() {
+                // Voices are now loaded
+            };
+        }
+    </script>
+</body>
+</html>
